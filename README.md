@@ -66,6 +66,24 @@ The script runs PyInstaller with the correct `--add-data` separator for the
 current operating system and then copies the `assets/` folder to `dist/assets/`.
 The generated executable is written to the `dist/` folder.
 
+## Creating a GitHub release
+
+This repository includes a GitHub Actions workflow that builds Linux and
+Windows executables and attaches them to a release.
+
+Create and push a version tag:
+
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+GitHub will create a release with:
+
+- `BreakoutUniverse-linux.zip`
+- `BreakoutUniverse-windows.zip`
+- Source code archives generated automatically by GitHub
+
 ## Development
 
 Run the linter with:
