@@ -1,13 +1,15 @@
 """Main menu screen: animated background, logo and option navigation."""
 import sys
 
+import pygame
 import pygame.image
 from pygame import Surface
 from pygame.font import Font
 
 from code.Const import (GAME_WIDTH, MENU_OPTION, MUSIC_VOLUME,
                         C_MENU_ACTIVE, C_MENU_IDLE,
-                        C_TEXT_OUTLINE, s, get_font, asset_path)
+                        C_TEXT_OUTLINE, s, get_font, asset_path,
+                        window_to_game)
 from code.Assets import get_background, get_logo_sprite
 
 
@@ -20,8 +22,29 @@ class Menu:
         self.logo_rect = self.logo_surf.get_rect(
             center=(GAME_WIDTH / 2, s(85)))
 
-    def run(self, scale_callback):
+    def _option_rects(self):
+        rects = []
+        for i, option in enumerate(MENU_OPTION):
+            font = get_font(s(24))
+            surf = font.render(option, False, C_MENU_IDLE)
+            center = (GAME_WIDTH / 2, s(205 + 34 * i))
+            rect = surf.get_rect(center=center)
+            rect.inflate_ip(s(60), s(20))
+            rects.append(rect)
+        return rects
+
+    def _pick_option(self, window, pos):
+        game_pos = window_to_game(window, pos)
+        if game_pos is None:
+            return None
+        for i, rect in enumerate(self._option_rects()):
+            if rect.collidepoint(game_pos):
+                return i
+        return None
+
+    def run(self, scale_callback, window):
         menu_option = 0
+        pygame.mouse.set_visible(True)
         pygame.mixer_music.load(asset_path('menu.mp3'))
         pygame.mixer_music.set_volume(MUSIC_VOLUME)
         pygame.mixer_music.play(-1)
@@ -51,6 +74,15 @@ class Menu:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+                if event.type == pygame.MOUSEMOTION:
+                    hovered = self._pick_option(window, event.pos)
+                    if hovered is not None:
+                        menu_option = hovered
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        picked = self._pick_option(window, event.pos)
+                        if picked is not None:
+                            return MENU_OPTION[picked]
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_DOWN:
                         if menu_option < len(MENU_OPTION) - 1:

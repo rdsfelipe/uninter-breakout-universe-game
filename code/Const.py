@@ -40,6 +40,23 @@ def asset_path(*parts):
     return os.path.join(base_path, 'assets', *parts)
 
 
+def window_to_game(window, pos):
+    """Map a window pixel position to game-surface coordinates (cover scaling)."""
+    win_w, win_h = window.get_size()
+    scale = max(win_w / GAME_WIDTH, win_h / GAME_HEIGHT)
+    scaled_w = round(GAME_WIDTH * scale)
+    scaled_h = round(GAME_HEIGHT * scale)
+    ox = (win_w - scaled_w) // 2
+    oy = (win_h - scaled_h) // 2
+    x, y = pos
+    if not (ox <= x < ox + scaled_w and oy <= y < oy + scaled_h):
+        return None
+    return (
+        (x - ox) * GAME_WIDTH / scaled_w,
+        (y - oy) * GAME_HEIGHT / scaled_h,
+    )
+
+
 # Pixel-art font used across all screens.
 FONT_PATH = asset_path("m5x7.ttf")
 FONT_SIZE_STEP = 8
@@ -110,6 +127,10 @@ HEART_GAP = 8
 
 # Menu
 MENU_OPTION = ('NEW GAME', 'SCORES', 'EXIT')
+
+# Score name entry
+SCORE_NAME_MAX_LEN = 4
+SCORE_NAME_DEFAULT = 'NONE'
 
 # Audio
 MUSIC_VOLUME = 0.3

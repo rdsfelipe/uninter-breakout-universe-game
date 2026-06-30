@@ -44,7 +44,7 @@ class Game:
         while True:
             score = Score(self.game_surface)
             menu = Menu(self.game_surface)
-            menu_return = menu.run(self.present)
+            menu_return = menu.run(self.present, self.window)
 
             if menu_return == MENU_OPTION[0]:  # NEW GAME
                 player_score = 0

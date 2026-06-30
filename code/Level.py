@@ -72,6 +72,7 @@ class Level:
 
     def run(self, scale_callback) -> tuple[bool, int]:
         """Returns (won: bool, score: int)"""
+        pygame.mouse.set_visible(False)
         pygame.mixer_music.load(asset_path(self.config["music"]))
         pygame.mixer_music.set_volume(MUSIC_VOLUME)
         pygame.mixer_music.play(-1)
