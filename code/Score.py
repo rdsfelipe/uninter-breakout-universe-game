@@ -88,15 +88,7 @@ class Score:
             self._draw_background()
             self.score_text(s(48), 'TOP 10 SCORES',
                             C_MENU_ACTIVE, SCORE_POS['Title'])
-            self.score_text(
-                s(20), 'NAME     SCORE           DATE      ',
-                C_MENU_ACTIVE, SCORE_POS['Label'])
-
-            for player_score in list_score:
-                id_, name, score, date = player_score
-                self.score_text(s(20), f'{name}     {score:05d}     {date}',
-                                C_MENU_IDLE,
-                                SCORE_POS[list_score.index(player_score)])
+            self._draw_score_table(list_score)
 
             scale_callback()
 
@@ -109,6 +101,41 @@ class Score:
                         return
                     if event.key == pygame.K_F11:
                         pygame.display.toggle_fullscreen()
+
+    def _score_table_layout(self):
+        text_size = s(20)
+        font = get_font(text_size)
+        name_w = font.size('W' * SCORE_NAME_MAX_LEN)[0]
+        score_w = font.size('99999')[0]
+        date_w = font.size('00:00 - 00/00/00')[0]
+        gap = s(24)
+        total_w = name_w + gap + score_w + gap + date_w
+        left = (GAME_WIDTH - total_w) / 2
+        return {
+            'name': left + name_w / 2,
+            'score': left + name_w + gap + score_w / 2,
+            'date': left + name_w + gap + score_w + gap + date_w / 2,
+        }
+
+    def _draw_score_table(self, list_score: list):
+        columns = self._score_table_layout()
+
+        self.score_text(s(20), 'NAME', C_MENU_ACTIVE,
+                        (columns['name'], SCORE_POS['Label'][1]))
+        self.score_text(s(20), 'SCORE', C_MENU_ACTIVE,
+                        (columns['score'], SCORE_POS['Label'][1]))
+        self.score_text(s(20), 'DATE', C_MENU_ACTIVE,
+                        (columns['date'], SCORE_POS['Label'][1]))
+
+        for row, player_score in enumerate(list_score):
+            _, name, score, date = player_score
+            y = SCORE_POS[row][1]
+            self.score_text(s(20), str(name).upper(), C_MENU_IDLE,
+                            (columns['name'], y))
+            self.score_text(s(20), f'{score:05d}', C_MENU_IDLE,
+                            (columns['score'], y))
+            self.score_text(s(20), date, C_MENU_IDLE,
+                            (columns['date'], y))
 
     def score_text(self, text_size: int, text: str, text_color: tuple, text_center_pos: tuple):
         text_font: Font = get_font(text_size)
