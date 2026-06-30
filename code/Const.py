@@ -20,10 +20,11 @@ BASE_HEIGHT = 324
 GAME_WIDTH = 1280
 GAME_HEIGHT = 720
 
-# Initial window size. Smaller than the internal resolution; the game_surface
-# is scaled to *cover* (fill) the window each frame, so it never letterboxes.
-WINDOW_WIDTH = 960
-WINDOW_HEIGHT = 540
+# Initial window size. Matches the internal render resolution so the default
+# view maps 1:1 (no scaling, no blur). On resize the game_surface is scaled to
+# *cover* (fill) the window, so it never letterboxes.
+WINDOW_WIDTH = GAME_WIDTH
+WINDOW_HEIGHT = GAME_HEIGHT
 
 # Uniform scale from the logical design space to the render space.
 SCALE = GAME_WIDTH / BASE_WIDTH
