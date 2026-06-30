@@ -171,11 +171,15 @@ class Level:
             s(10), f'FPS: {fps:.0f}', C_WHITE,
             (GAME_WIDTH - s(60), GAME_HEIGHT - s(15)))
 
-        # "Press SPACE" hint while the ball is still resting on the paddle.
+        # Controls hint while the ball is still resting on the paddle.
         if not self.ball.active:
+            hint_y = GAME_HEIGHT // 2 + s(24)
+            self._draw_text_centered(
+                s(16), 'LEFT / RIGHT ARROWS to move', C_WHITE,
+                (GAME_WIDTH // 2, hint_y))
             self._draw_text_centered(
                 s(16), 'Press SPACE to launch', C_WHITE,
-                (GAME_WIDTH // 2, GAME_HEIGHT // 2 + s(30)))
+                (GAME_WIDTH // 2, hint_y + s(20)))
 
     def _draw_text(self, text_size: int, text: str, text_color: tuple,
                    text_pos: tuple):
